@@ -16,17 +16,11 @@ public protocol Account {
     var username: String { get }
     var avaterUrl: URL { get }
 
-    var keychainID: String { get }
-
     func isEqual(_ account: Account?) -> Bool
 
 }
 
 extension Account {
-
-    var keychainID: String {
-        return self.id
-    }
 
     func isEqual(_ account: Account?) -> Bool {
         guard let account = account else {
