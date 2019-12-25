@@ -1,4 +1,4 @@
-# SocialProviders
+# Swift Social Provider
 
 This package social service providers. Uses it for [NowPlayingTweet][].
 
