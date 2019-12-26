@@ -15,18 +15,23 @@ public protocol Client {
     typealias Failure = (Error) -> Void
 
     var credentials: Credentials { get }
+    var userAgent: String? { get set }
 
-    init?(_: Credentials)
+    init?(_: Credentials, userAgent: String?)
 
     func revoke(success: Success?, failure: Failure?)
 
     func verify(success: @escaping AccountSuccess, failure: Failure?)
 
-    func post(visibility: String, text: String, success: Success?, failure: Failure?)
+    func post(text: String, otherParams: [String : String]?, success: Success?, failure: Failure?)
 
 }
 
 public extension Client {
+
+    init?(_ credentials: Credentials) {
+        self.init(credentials, userAgent: nil)
+    }
 
     func revoke() {
         self.revoke(success: nil, failure: nil)
@@ -37,7 +42,7 @@ public extension Client {
     }
 
     func post(text: String, success: Success? = nil, failure: Failure? = nil) {
-        self.post(visibility: "", text: text, success: success, failure: failure)
+        self.post(text: text, otherParams: nil, success: success, failure: failure)
     }
 
 }
