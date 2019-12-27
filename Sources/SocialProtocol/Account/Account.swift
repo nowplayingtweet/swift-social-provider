@@ -20,7 +20,7 @@ public protocol Account {
 
 }
 
-extension Account {
+public extension Account {
 
     func isEqual(_ account: Account?) -> Bool {
         guard let account = account else {
