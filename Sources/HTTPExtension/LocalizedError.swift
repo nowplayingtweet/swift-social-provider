@@ -1,5 +1,5 @@
 /**
- *  HTTPClientError++.swift
+ *  LocalizedError.swift
  *  NowPlayingTweet
  *
  *  © 2019 kPherox.
@@ -20,7 +20,7 @@ extension HTTPClientError: LocalizedError {
 extension EventLoopError: LocalizedError {
 
     public var errorDescription: String? {
-        return String(describing: self)
+        return "EventLoopError.\(String(describing: self))"
     }
 
 }
