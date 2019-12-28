@@ -1,0 +1,28 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: macos
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v --enable-code-coverage
+    - name: Generate lcov file
+      run: |
+        xcrun llvm-cov export -format=lcov \
+          -instr-profile .build/debug/codecov/default.profdata \
+          -ignore-filename-regex="(.build/|Tests/)" \
+          .build/debug/swift-social-providerPackageTests.xctest/Contents/MacOS/swift-social-providerPackageTests > ./coverage.lcov
+    - name: Codecov
+      uses: codecov/codecov-action@v1.0.5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.lcov
+        name: Test
+        fail_ci_if_error: true
