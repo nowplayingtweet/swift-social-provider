@@ -7,7 +7,7 @@ private struct TestAccount: Account {
     let id: String = ""
     let name: String = ""
     let username: String = ""
-    let avaterUrl: URL = URL(string: "https://pl.kpherox.dev/images/avi.png")!
+    let avaterUrl: URL = URL(string: "https://social.test/image.png")!
 }
 
 private struct TestCredentials: Credentials, OAuth2 {
