@@ -1,9 +1,9 @@
 import XCTest
 
-import SocialProviderTests
+import SocialProtocolTests
 import HTTPExtensionTests
 
 var tests = [XCTestCaseEntry]()
-tests += SocialProviderTests.allTests()
+tests += SocialProtocolTests.allTests()
 tests += HTTPExtensionTests.allTests()
 XCTMain(tests)

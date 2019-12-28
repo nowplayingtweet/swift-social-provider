@@ -2,26 +2,21 @@ import XCTest
 @testable import SocialProtocol
 
 private struct TestAccount: Account {
-
     static var provider: Provider = Provider(rawValue: "")
 
     let id: String = ""
     let name: String = ""
     let username: String = ""
     let avaterUrl: URL = URL(string: "https://pl.kpherox.dev/images/avi.png")!
-
 }
 
 private struct TestCredentials: Credentials, OAuth2 {
-
     let apiKey: String = ""
     let apiSecret: String = ""
     let oauthToken: String = ""
-
 }
 
 private class TestClient: Client {
-
     let credentials: Credentials
     var userAgent: String?
 
@@ -42,28 +37,22 @@ private class TestClient: Client {
     func post(text: String, otherParams: [String : String]?, success: Client.Success?, failure: Client.Failure?) {
         XCTAssertNil(otherParams)
     }
-
 }
 
 extension TestClient: D14nClient {
-
     static func registerApp(base: String, name: String, redirectUri: String, success: @escaping D14nClient.RegisterSuccess, failure: Client.Failure?) {
         XCTAssertEqual(redirectUri, "urn:ietf:wg:oauth:2.0:oob")
     }
-
 }
 
 extension TestClient: PostAttachments {
-
     func post(text: String, image: Data?, otherParams: [String : String]?, success: Client.Success?, failure: Client.Failure?) {
         XCTAssertNil(image)
         XCTAssertNil(otherParams)
     }
-
 }
 
 extension TestClient: AuthorizeByCallback, AuthorizeByCode {
-
     static func handleCallback(_: NSAppleEventDescriptor) {}
 
     static func authorize(key: String, secret: String, redirectUri: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
@@ -77,11 +66,9 @@ extension TestClient: AuthorizeByCallback, AuthorizeByCode {
     static func requestToken(key: String, secret: String, code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
         XCTAssertNil(failure)
     }
-
 }
 
 extension TestClient: D14nAuthorizeByCallback, D14nAuthorizeByCode {
-
     static func authorize(base: String, key: String, secret: String, redirectUri: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
         XCTAssertNil(failure)
     }
@@ -93,7 +80,6 @@ extension TestClient: D14nAuthorizeByCallback, D14nAuthorizeByCode {
     static func requestToken(base: String, key: String, secret: String, code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
         XCTAssertNil(failure)
     }
-
 }
 
 final class ClientTests: XCTestCase {
