@@ -34,8 +34,8 @@ private class TestClient: Client {
         XCTAssertNil(failure)
     }
 
-    func post(text: String, otherParams: [String : String]?, success: Client.Success?, failure: Client.Failure?) {
-        XCTAssertNil(otherParams)
+    func post(text: String, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
+        XCTAssertTrue(otherParams.isEmpty)
     }
 }
 
@@ -46,9 +46,9 @@ extension TestClient: D14nClient {
 }
 
 extension TestClient: PostAttachments {
-    func post(text: String, image: Data?, otherParams: [String : String]?, success: Client.Success?, failure: Client.Failure?) {
+    func post(text: String, image: Data?, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
         XCTAssertNil(image)
-        XCTAssertNil(otherParams)
+        XCTAssertTrue(otherParams.isEmpty)
     }
 }
 

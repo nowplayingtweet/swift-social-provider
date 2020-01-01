@@ -23,7 +23,7 @@ public protocol Client {
 
     func verify(success: @escaping AccountSuccess, failure: Failure?)
 
-    func post(text: String, otherParams: [String : String]?, success: Success?, failure: Failure?)
+    func post(text: String, otherParams: [(String, String)], success: Success?, failure: Failure?)
 
 }
 
@@ -42,7 +42,7 @@ public extension Client {
     }
 
     func post(text: String, success: Success? = nil, failure: Failure? = nil) {
-        self.post(text: text, otherParams: nil, success: success, failure: failure)
+        self.post(text: text, otherParams: [], success: success, failure: failure)
     }
 
 }

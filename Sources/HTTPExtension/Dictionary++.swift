@@ -7,19 +7,15 @@
 
 import Foundation
 
-public extension Dictionary where Key: ExpressibleByStringLiteral, Value: ExpressibleByStringLiteral {
+public extension Array where Element == (String, Any) {
 
     var urlencoded: String {
         let params: [String] = self.map {
             "\($0)=\($1)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        }.sorted()
+        }
 
         return params.joined(separator: "&")
     }
-
-}
-
-public extension Dictionary where Key == StringLiteralType {
 
     func multipartData(boundary: String) -> Data {
         let boundaryPrefix = "--\(boundary)"
@@ -36,7 +32,7 @@ public extension Dictionary where Key == StringLiteralType {
             case let string as String:
                 body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
                 body.append(string)
-            case let value as Any:
+            default:
                 body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
                 body.append(String(describing: value))
             }
