@@ -10,17 +10,11 @@ import Foundation
 public extension Dictionary where Key: ExpressibleByStringLiteral, Value: ExpressibleByStringLiteral {
 
     var urlencoded: String {
-        let params: [String] = self.mapValues { String(describing: $0) }.mapValues {
-            $0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        }.map { "\($0)=\($1)" }
+        let params: [String] = self.map {
+            "\($0)=\($1)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        }.sorted()
 
-        return params.reduce(into: "") { result, value in
-            if result == "" {
-                result = value
-            } else {
-                result.append("&\(value)")
-            }
-        }
+        return params.joined(separator: "&")
     }
 
 }
