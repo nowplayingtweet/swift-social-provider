@@ -4,8 +4,8 @@ import XCTest
 final class TupleArrayExtensionTests: XCTestCase {
 
     static var allTests = [
-        ("Test extension Array<String, Any>.urlencoded", testTupleArrayURLEncoded),
-        ("Test extension Array<String, Any>.multipartData", testTupleArrayMultipartData),
+        ("Test Array<String, Any>.urlencoded", testTupleArrayURLEncoded),
+        ("Test Array<String, Any>.multipartData", testTupleArrayMultipartData),
     ]
 
     func testTupleArrayURLEncoded() {
@@ -28,19 +28,28 @@ final class TupleArrayExtensionTests: XCTestCase {
         let boundary = UUID().uuidString
         let boundaryPrefix = "--\(boundary)"
         let data = NSMutableData()
-        data.append("\(boundaryPrefix)\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("Content-Disposition: form-data; name=\"test\"\r\n\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("one\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("\(boundaryPrefix)\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("Content-Disposition: form-data; name=\"integer\"\r\n\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("21\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("\(boundaryPrefix)\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("Content-Disposition: form-data; name=\"テスト\"; filename=\"media\"\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8, allowLossyConversion: false)!)
+        data.append("\(boundaryPrefix)\r\n")
+        data.append("Content-Disposition: form-data; name=\"test\"\r\n\r\n")
+        data.append("one\r\n")
+        data.append("\(boundaryPrefix)\r\n")
+        data.append("Content-Disposition: form-data; name=\"integer\"\r\n\r\n")
+        data.append("21\r\n")
+        data.append("\(boundaryPrefix)\r\n")
+        data.append("Content-Disposition: form-data; name=\"テスト\"; filename=\"media\"\r\n")
+        data.append("Content-Type: application/octet-stream\r\n\r\n")
         data.append(imageData!)
-        data.append("\r\n".data(using: .utf8, allowLossyConversion: false)!)
-        data.append("\(boundaryPrefix)--".data(using: .utf8, allowLossyConversion: false)!)
+        data.append("\r\n")
+        data.append("\(boundaryPrefix)--")
         XCTAssertEqual(formData.multipartData(boundary: boundary), data as Data)
+    }
+
+}
+
+private extension NSMutableData {
+
+    func append(_ string: String) {
+        let data = string.data(using: .utf8, allowLossyConversion: false)
+        self.append(data!)
     }
 
 }
