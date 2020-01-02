@@ -17,7 +17,11 @@ public extension URLRequest {
         var request = self.init(url: url)
         request.httpMethod = "GET"
         headers.forEach { (key, value) in
-            request.setValue(value, forHTTPHeaderField: key)
+            if request.value(forHTTPHeaderField: key) != nil {
+                request.addValue(value, forHTTPHeaderField: key)
+            } else {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
         }
 
         return request
@@ -31,7 +35,11 @@ public extension URLRequest {
         var request = self.init(url: url)
         request.httpMethod = "POST"
         headers.forEach { (key, value) in
-            request.setValue(value, forHTTPHeaderField: key)
+            if request.value(forHTTPHeaderField: key) != nil {
+                request.addValue(value, forHTTPHeaderField: key)
+            } else {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
         }
 
         return request
