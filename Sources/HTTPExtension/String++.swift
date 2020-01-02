@@ -1,6 +1,6 @@
 /**
  *  String++.swift
- *  NowPlayingTweet
+ *  swift-social-provider
  *
  *  © 2019 kPherox.
 **/

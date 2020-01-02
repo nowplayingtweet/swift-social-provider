@@ -1,6 +1,6 @@
 /**
  *  URLRequest++.swift
- *  NowPlayingTweet
+ *  swift-social-provider
  *
  *  © 2019 kPherox.
 **/
@@ -32,10 +32,6 @@ public extension URLRequest {
         request.httpMethod = "POST"
         headers.forEach { (key, value) in
             request.setValue(value, forHTTPHeaderField: key)
-        }
-        request.httpBody = body
-        if let body = body {
-            request.setValue(String(body.count), forHTTPHeaderField: "Content-Length")
         }
 
         return request
