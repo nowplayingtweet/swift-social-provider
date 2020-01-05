@@ -1,21 +1,6 @@
 import XCTest
 @testable import SocialProtocol
 
-private struct TestAccount: Account {
-    static var provider: Provider = Provider(rawValue: "")
-
-    let id: String = ""
-    let name: String = ""
-    let username: String = ""
-    let avaterUrl: URL = URL(string: "https://social.test/image.png")!
-}
-
-private struct TestCredentials: Credentials, OAuth2 {
-    let apiKey: String = ""
-    let apiSecret: String = ""
-    let oauthToken: String = ""
-}
-
 private class TestClient: Client {
     let credentials: Credentials
     var userAgent: String?
@@ -91,12 +76,12 @@ final class ClientTests: XCTestCase {
     ]
 
     func testFallbackInitializer() {
-        let client = TestClient(TestCredentials())
+        let client = TestClient(TestOAuth2Credentials())
         XCTAssertNil(client?.userAgent)
     }
 
     func testFallbackFunctions() {
-        let client = TestClient(TestCredentials(), userAgent: nil)!
+        let client = TestClient(TestOAuth2Credentials(), userAgent: nil)!
         client.revoke()
         client.verify(success: { _ in })
         client.post(text: "")
