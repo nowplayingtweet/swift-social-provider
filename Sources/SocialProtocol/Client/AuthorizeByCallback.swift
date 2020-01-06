@@ -14,11 +14,3 @@ public protocol AuthorizeByCallback {
     func authorize(redirectUri: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?)
 
 }
-
-public extension AuthorizeByCallback {
-
-    func authorize(redirectUri: String, success: @escaping Client.TokenSuccess) {
-        self.authorize(redirectUri: redirectUri, success: success, failure: nil)
-    }
-
-}

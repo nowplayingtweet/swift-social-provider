@@ -17,21 +17,13 @@ public protocol D14nAuthorization {
     var key: String { get }
     var secret: String { get }
 
-    init?(base: String, key: String, secret: String)
-
-}
-
-public extension D14nAuthorization {
-
-    static func registerApp(base: String, name: String, success: @escaping RegisterSuccess, failure: Client.Failure? = nil) {
-        Self.registerApp(base: base, name: name, redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: success, failure: failure)
-    }
+    init(base: String, key: String, secret: String)
 
 }
 
 public extension D14nAuthorization where Self: Client {
 
-    init?(base: String, key: String, secret: String, userAgent: String?) {
+    init(base: String, key: String, secret: String, userAgent: String?) {
         self.init(base: base, key: key, secret: secret)
         self.userAgent = userAgent
     }

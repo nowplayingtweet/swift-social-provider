@@ -8,8 +8,8 @@ final class CredentialsTests: XCTestCase {
     ]
 
     func testOAuthVersion() {
-        XCTAssertEqual(OAuth.One, TestOAuth1Credentials.oauthVersion)
-        XCTAssertEqual(OAuth.Two, TestOAuth2Credentials.oauthVersion)
+        XCTAssertEqual(TestOAuth1Credentials.oauthVersion, OAuth.One)
+        XCTAssertEqual(TestOAuth2Credentials.oauthVersion, OAuth.Two)
     }
 
 }

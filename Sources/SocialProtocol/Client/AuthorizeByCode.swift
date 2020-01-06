@@ -14,15 +14,3 @@ public protocol AuthorizeByCode {
     func requestToken(code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?)
 
 }
-
-public extension AuthorizeByCode {
-
-    func authorize() {
-        self.authorize(failure: nil)
-    }
-
-    func requestToken(code: String, success: @escaping Client.TokenSuccess) {
-        self.requestToken(code: code, success: success, failure: nil)
-    }
-
-}

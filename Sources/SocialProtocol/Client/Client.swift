@@ -33,16 +33,4 @@ public extension Client {
         self.init(credentials, userAgent: nil)
     }
 
-    func revoke() {
-        self.revoke(success: nil, failure: nil)
-    }
-
-    func verify(success: @escaping AccountSuccess) {
-        self.verify(success: success, failure: nil)
-    }
-
-    func post(text: String, success: Success? = nil, failure: Failure? = nil) {
-        self.post(text: text, otherParams: [], success: success, failure: failure)
-    }
-
 }
