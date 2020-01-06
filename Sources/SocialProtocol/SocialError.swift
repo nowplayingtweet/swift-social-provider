@@ -9,11 +9,12 @@ import Foundation
 
 public enum SocialError: Error {
 
-    case FailedAuthorize(String)
-    case FailedRevoke(String)
-    case FailedVerify(String)
-    case FailedPost(String)
-    case NotImplements(className: String, function: String)
+    case invalidURL(string: String)
+    case failedAuthorize(String)
+    case failedRevoke(String)
+    case failedVerify(String)
+    case failedPost(String)
+    case notImplements(className: String, function: String)
 
 }
 
@@ -21,16 +22,18 @@ extension SocialError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .NotImplements(let className, let function):
+        case .invalidURL(let string):
+            return "Invalid URL: \(string)"
+        case .failedAuthorize(let message):
+            return "Failed authorize: \(message)"
+        case .failedRevoke(let message):
+            return "Failed revoke: \(message)"
+        case .failedVerify(let message):
+            return "Failed verify: \(message)"
+        case .failedPost(let message):
+            return "Failed post: \(message)"
+        case .notImplements(let className, let function):
             return "Not implements \(className).\(function)"
-        case .FailedAuthorize(let message):
-            return "failed authorize: \(message)"
-        case .FailedRevoke(let message):
-            return "failed revoke: \(message)"
-        case .FailedVerify(let message):
-            return "failed verify: \(message)"
-        case .FailedPost(let message):
-            return "failed post: \(message)"
         }
     }
 

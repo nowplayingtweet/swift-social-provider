@@ -8,15 +8,17 @@ final class SocialErrorTests: XCTestCase {
     ]
 
     func testSocialErrorLocalizedDescription() {
-        XCTAssertEqual(SocialError.FailedAuthorize("message").localizedDescription,
-                       "failed authorize: message")
-        XCTAssertEqual(SocialError.FailedRevoke("message").localizedDescription,
-                       "failed revoke: message")
-        XCTAssertEqual(SocialError.FailedVerify("message").localizedDescription,
-                       "failed verify: message")
-        XCTAssertEqual(SocialError.FailedPost("message").localizedDescription,
-                       "failed post: message")
-        XCTAssertEqual(SocialError.NotImplements(className: "ClassName", function: "functionName(_:)").localizedDescription,
+        XCTAssertEqual(SocialError.invalidURL(string: "無効なURL").localizedDescription,
+                       "Invalid URL: 無効なURL")
+        XCTAssertEqual(SocialError.failedAuthorize("message").localizedDescription,
+                       "Failed authorize: message")
+        XCTAssertEqual(SocialError.failedRevoke("message").localizedDescription,
+                       "Failed revoke: message")
+        XCTAssertEqual(SocialError.failedVerify("message").localizedDescription,
+                       "Failed verify: message")
+        XCTAssertEqual(SocialError.failedPost("message").localizedDescription,
+                       "Failed post: message")
+        XCTAssertEqual(SocialError.notImplements(className: "ClassName", function: "functionName(_:)").localizedDescription,
                        "Not implements ClassName.functionName(_:)")
     }
 
