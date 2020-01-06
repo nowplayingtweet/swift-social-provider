@@ -14,7 +14,7 @@ public protocol Client {
     typealias AccountSuccess = (Account) -> Void
     typealias Failure = (Error) -> Void
 
-    var credentials: Credentials { get }
+    var credentials: Credentials? { get }
     var userAgent: String? { get set }
 
     init?(_: Credentials, userAgent: String?)
