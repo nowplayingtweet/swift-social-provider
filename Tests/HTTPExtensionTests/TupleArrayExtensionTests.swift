@@ -4,8 +4,8 @@ import XCTest
 final class TupleArrayExtensionTests: XCTestCase {
 
     static var allTests = [
-        ("Test Array<String, Any>.urlencoded", testTupleArrayURLEncoded),
-        ("Test Array<String, Any>.multipartData", testTupleArrayMultipartData),
+        ("testTupleArrayURLEncoded", testTupleArrayURLEncoded),
+        ("testTupleArrayMultipartData", testTupleArrayMultipartData),
     ]
 
     func testTupleArrayURLEncoded() {

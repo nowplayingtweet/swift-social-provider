@@ -4,7 +4,7 @@ import XCTest
 final class CredentialsTests: XCTestCase {
 
     static var allTests = [
-        ("Test Credentials.oauthVersion", testOAuthVersion),
+        ("testOAuthVersion", testOAuthVersion),
     ]
 
     func testOAuthVersion() {

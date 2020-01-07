@@ -4,8 +4,8 @@ import XCTest
 final class URLRequestExtensionTests: XCTestCase {
 
     static var allTests = [
-        ("Test URLRequest.get", testURLRequestGet),
-        ("Test URLRequest.post", testURLRequestPost),
+        ("testURLRequestGet", testURLRequestGet),
+        ("testURLRequestPost", testURLRequestPost),
     ]
 
     func testURLRequestGet() {

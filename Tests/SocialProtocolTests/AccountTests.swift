@@ -4,7 +4,7 @@ import XCTest
 final class AccountTests: XCTestCase {
 
     static var allTests = [
-        ("Test Account.isEqual/1", testIsEqual),
+        ("testIsEqual", testIsEqual),
     ]
 
     func testIsEqual() {

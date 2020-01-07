@@ -4,8 +4,8 @@ import XCTest
 final class StringExtensionTests: XCTestCase {
 
     static var allTests = [
-        ("Test String.queryParamComponents", testStringQueryParamComponents),
-        ("Test String.isHTTPString", testStringIsHTTPString),
+        ("testStringQueryParamComponents", testStringQueryParamComponents),
+        ("testStringIsHTTPString", testStringIsHTTPString),
     ]
 
     func testStringQueryParamComponents() {

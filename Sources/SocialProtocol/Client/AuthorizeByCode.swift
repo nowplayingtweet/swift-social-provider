@@ -9,7 +9,7 @@ import Foundation
 
 public protocol AuthorizeByCode {
 
-    func authorize(failure: Client.Failure?)
+    func authorize(openURL: @escaping (URL) -> Void, failure: Client.Failure?)
 
     func requestToken(code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?)
 

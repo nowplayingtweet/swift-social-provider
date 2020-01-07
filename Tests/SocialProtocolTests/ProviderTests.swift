@@ -4,7 +4,7 @@ import XCTest
 final class ProviderTests: XCTestCase {
 
     static var allTests = [
-        ("Test Comparable Provider", testProviderComparable),
+        ("testProviderComparable", testProviderComparable),
     ]
 
     func testProviderComparable() {

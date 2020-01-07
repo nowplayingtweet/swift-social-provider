@@ -4,7 +4,7 @@ import XCTest
 final class SocialErrorTests: XCTestCase {
 
     static var allTests = [
-        ("Test SocialError.localizedDescription", testSocialErrorLocalizedDescription),
+        ("testSocialErrorLocalizedDescription", testSocialErrorLocalizedDescription),
     ]
 
     func testSocialErrorLocalizedDescription() {

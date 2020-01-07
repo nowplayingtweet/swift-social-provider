@@ -11,6 +11,6 @@ public protocol AuthorizeByCallback {
 
     static func handleCallback(_: NSAppleEventDescriptor)
 
-    func authorize(redirectUri: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?)
+    func authorize(redirectUri: String, openURL: @escaping (URL) -> Void, success: @escaping Client.TokenSuccess, failure: Client.Failure?)
 
 }

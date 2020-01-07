@@ -4,7 +4,7 @@ import XCTest
 final class ClientTests: XCTestCase {
 
     static var allTests = [
-        ("Test fallback Client initializer", testFallbackInitializer),
+        ("testFallbackInitializer", testFallbackInitializer),
     ]
 
     func testFallbackInitializer() {
