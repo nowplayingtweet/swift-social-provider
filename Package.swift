@@ -19,5 +19,10 @@ let package = Package(
         .testTarget(name: "SocialProtocolTests", dependencies: ["SocialProtocol"]),
         .target(name: "HTTPExtension", dependencies: []),
         .testTarget(name: "HTTPExtensionTests", dependencies: ["HTTPExtension"]),
+        .target(name: "MastodonProvider", dependencies: [
+            "SocialProtocol",
+            "HTTPExtension",
+        ]),
+        .testTarget(name: "MastodonProviderTests", dependencies: ["MastodonProvider"]),
     ]
 )
