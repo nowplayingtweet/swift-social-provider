@@ -2,34 +2,47 @@ name: Test
 
 on:
   push:
+    branches:
+    - master
     paths:
+    - '.github/workflows/**'
     - 'Package.swift'
     - 'Sources/**'
     - 'Tests/**'
   pull_request:
     paths:
+    - '.github/workflows/**'
     - 'Package.swift'
     - 'Sources/**'
     - 'Tests/**'
 
 jobs:
   build:
-
-    runs-on: macos
-
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout source code
+      uses: actions/checkout@v1
+    - if: startsWith( matrix.os, 'ubuntu' )
+      name: Setup swift for Ubuntu
+      uses: YOCKOW/Action-setup-swift@master
+      with:
+        swift-version: '5.1.3'
     - name: Build
       run: swift build -v
     - name: Run tests
       run: swift test -v --enable-code-coverage
-    - name: Generate lcov file
+    - if: startsWith( matrix.os, 'macos' )
+      name: Generate lcov file
       run: |
         xcrun llvm-cov export -format=lcov \
           -instr-profile .build/debug/codecov/default.profdata \
           -ignore-filename-regex="(.build/|Tests/)" \
           .build/debug/swift-social-providerPackageTests.xctest/Contents/MacOS/swift-social-providerPackageTests > ./coverage.lcov
-    - name: Codecov
+    - if: startsWith( matrix.os, 'macos' )
+      name: Upload code coverage to Codecov
       uses: codecov/codecov-action@v1.0.5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
