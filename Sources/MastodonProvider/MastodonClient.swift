@@ -49,17 +49,10 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
 
     static var callbackObserver: NSObjectProtocol?
 
-    static func handleCallback(_ event: NSAppleEventDescriptor) {
-        guard let urlString = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
-            , let url = URL(string: urlString) else {
-                return
-        }
-
-        let userInfo = ["url" : url]
-
+    static func handleCallback(_ url: URL) {
         NotificationQueue.default.enqueue(.init(name: .callbackMastodon,
                                                 object: nil,
-                                                userInfo: userInfo as [AnyHashable : Any]),
+                                                userInfo: ["url" : url]),
                                           postingStyle: .asap)
     }
 

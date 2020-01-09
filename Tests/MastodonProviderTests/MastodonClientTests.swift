@@ -8,12 +8,11 @@ final class MastodonClientTests: XCTestCase {
     ]
 
     func testHandleCallback() {
-        let event = NSAppleEventDescriptor(eventClass: .init(kInternetEventClass), eventID: .init(kAEGetURL), targetDescriptor: nil, returnID: .zero, transactionID: .zero)
-        event.setParam(.init(string: "https://social.test/url"), forKeyword: .init(keyDirectObject))
+        let url = URL(string: "https://social.test/url")!
         NotificationCenter.default.addObserver(forName: .callbackMastodon, object: nil, queue: nil) { notification in
-            XCTAssertEqual(notification.userInfo?["url"] as? URL, URL(string: "https://social.test/url"))
+            XCTAssertEqual(notification.userInfo?["url"] as? URL, url)
         }
-        MastodonClient.handleCallback(event)
+        MastodonClient.handleCallback(url)
     }
 
 }
