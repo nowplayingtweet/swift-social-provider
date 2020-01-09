@@ -2,12 +2,16 @@ name: Test
 
 on:
   push:
+    branches:
+    - master
     paths:
+    - '.github/workflows/**'
     - 'Package.swift'
     - 'Sources/**'
     - 'Tests/**'
   pull_request:
     paths:
+    - '.github/workflows/**'
     - 'Package.swift'
     - 'Sources/**'
     - 'Tests/**'
