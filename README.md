@@ -5,9 +5,9 @@ This package social service providers. Uses it for [NowPlayingTweet][].
 
 <!-- badge -->
 [Code Coverage]: https://img.shields.io/codecov/c/gh/nowplayingtweet/swift-social-provider?style=for-the-badge
-[Latest (Pre)Release]: https://img.shields.io/github/v/tag/nowplayingtweet/swift-social-provider?style=for-the-badge&label=release&sort=semver&include_prereleases
+[Latest (Pre)Release]: https://img.shields.io/github/v/tag/nowplayingtweet/swift-social-provider?label=release&style=for-the-badge&sort=semver&include_prereleases
 [License]: https://img.shields.io/github/license/nowplayingtweet/swift-social-provider?style=for-the-badge
-[Test Status]: https://img.shields.io/github/workflow/status/nowplayingtweet/swift-social-provider/Test?style=for-the-badge
+[Test Status]: https://img.shields.io/github/workflow/status/nowplayingtweet/swift-social-provider/Test?label=build/test&style=for-the-badge
 
 <!-- url -->
 [Codecov]: https://codecov.io/gh/nowplayingtweet/swift-social-provider
