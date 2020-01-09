@@ -18,12 +18,11 @@ final class TupleArrayExtensionTests: XCTestCase {
     }
 
     func testTupleArrayMultipartData() {
-        let imageTIFF = NSImage(named: NSImage.userGuestName)?.tiffRepresentation
-        let imageData = NSBitmapImageRep(data: imageTIFF!)?.representation(using: .png, properties: [:])
+        let testData = "test data".data(using: .utf8)
         let formData: [(String, Any)] = [
             ("test", "one"),
             ("integer", 21),
-            ("テスト", imageData!),
+            ("テスト", testData!),
         ]
         let boundary = UUID().uuidString
         let boundaryPrefix = "--\(boundary)"
@@ -37,7 +36,7 @@ final class TupleArrayExtensionTests: XCTestCase {
         data.append("\(boundaryPrefix)\r\n")
         data.append("Content-Disposition: form-data; name=\"テスト\"; filename=\"media\"\r\n")
         data.append("Content-Type: application/octet-stream\r\n\r\n")
-        data.append(imageData!)
+        data.append(testData!)
         data.append("\r\n")
         data.append("\(boundaryPrefix)--")
         XCTAssertEqual(formData.multipartData(boundary: boundary), data as Data)
