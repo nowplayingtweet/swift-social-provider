@@ -1,6 +1,16 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+    - 'Package.swift'
+    - 'Sources/**'
+    - 'Tests/**'
+  pull_request:
+    paths:
+    - 'Package.swift'
+    - 'Sources/**'
+    - 'Tests/**'
 
 jobs:
   build:
