@@ -57,6 +57,10 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
     }
 
     static func registerApp(base: String, name: String, redirectUri: String, success: @escaping D14nAuthorization.RegisterSuccess, failure: Client.Failure?) {
+        self.registerApp(HTTPClient.shared, base: base, name: name, redirectUri: redirectUri, success: success, failure: failure)
+    }
+
+    static func registerApp(_ client: HTTPClientProtocol, base: String, name: String, redirectUri: String, success: @escaping D14nAuthorization.RegisterSuccess, failure: Client.Failure?) {
         if !base.isHTTPString {
             failure?(SocialError.invalidURL(string: base))
             return
@@ -68,15 +72,10 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
             ("scopes", "read write"),
         ]
 
-        guard let urlRequest = URLRequest.post(url: "\(base)/api/v1/apps", headers: [
+        client.post(url: "\(base)/api/v1/apps", headers: [
             ("User-Agent", "Swift Social Media Provider"),
             ("Content-Type", "application/x-www-form-urlencoded"),
-        ], body: requestParams.urlencoded.data(using: .utf8)) else {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
-        URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+        ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
             if let error = error {
                 failure?(error)
                 return
@@ -115,7 +114,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         return URL(string: "\(base)/oauth/authorize?\(query)")!
     }
 
-    var urlSession: URLSession = URLSession.shared
+    var client: HTTPClientProtocol
 
     var base: String
     var key: String
@@ -139,12 +138,16 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
 
         self.credentials = credentials
         self.userAgent = userAgent
+
+        self.client = HTTPClient.shared
     }
 
     required init(base: String, key: String, secret: String) {
         self.base = base
         self.key = key
         self.secret = secret
+
+        self.client = HTTPClient.shared
     }
 
     private func authorization(redirectUri: String, code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
@@ -157,15 +160,10 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
             ("grant_type", "authorization_code"),
         ]
 
-        guard let urlRequest = URLRequest.post(url: "\(base)/oauth/token", headers: [
+        self.client.post(url: "\(base)/oauth/token", headers: [
             ("User-Agent", "Swift Social Media Provider"),
             ("Content-Type", "application/x-www-form-urlencoded"),
-        ], body: requestParams.urlencoded.data(using: .utf8)) else {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
-        URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+        ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
             if let error = error {
                 failure?(error)
                 return
@@ -246,15 +244,10 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
             return
         }
 
-        guard let urlRequest = URLRequest.get(url: "\(credentials.base)/api/v1/accounts/verify_credentials", headers: [
+        self.client.get(url: "\(credentials.base)/api/v1/accounts/verify_credentials", headers: [
             ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
             ("Authorization", "Bearer \(credentials.oauthToken)"),
-        ]) else {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
-        self.urlSession.dataTask(with: urlRequest) { data, response, error in
+        ]) { data, response, error in
             if let error = error {
                 failure?(error)
                 return
@@ -294,16 +287,11 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
             requestParams += otherParams
         }
 
-        guard let urlRequest = URLRequest.post(url: "\(credentials.base)/api/v1/statuses", headers: [
+        self.client.post(url: "\(credentials.base)/api/v1/statuses", headers: [
             ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
             ("Authorization", "Bearer \(credentials.oauthToken)"),
             ("Content-Type", "application/x-www-form-urlencoded"),
-        ], body: requestParams.urlencoded.data(using: .utf8)) else {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
-        self.urlSession.dataTask(with: urlRequest) { data, response, error in
+        ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
             if let error = error {
                 failure?(error)
                 return
@@ -341,16 +329,11 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         ]
         let multipartData = requestBody.multipartData(boundary: boundary)
 
-        guard let urlRequest = URLRequest.post(url: "\(credentials.base)/api/v1/media", headers: [
+        self.client.post(url: "\(credentials.base)/api/v1/media", headers: [
             ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
             ("Authorization", "Bearer \(credentials.oauthToken)"),
             ("Content-Type", "multipart/form-data; boundary=\(boundary)"),
-        ], body: multipartData) else {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
-        self.urlSession.dataTask(with: urlRequest) { data, response, error in
+        ], body: multipartData) { data, response, error in
             if let error = error {
                 failure?(error)
                 return
