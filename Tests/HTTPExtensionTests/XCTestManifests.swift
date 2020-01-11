@@ -6,6 +6,7 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(HTTPClientTests.allTests),
         testCase(StringExtensionTests.allTests),
         testCase(TupleArrayExtensionTests.allTests),
+        testCase(URLSessionProtocolTests.allTests),
     ]
 }
 #endif
