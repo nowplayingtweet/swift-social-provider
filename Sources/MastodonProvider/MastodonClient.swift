@@ -189,7 +189,9 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            success(MastodonCredentials(base: self.base, apiKey: self.key, apiSecret: self.secret, oauthToken: oauth.token))
+            let credentials = MastodonCredentials(base: self.base, apiKey: self.key, apiSecret: self.secret, oauthToken: oauth.token)
+            self.credentials = credentials
+            success(credentials)
         }
     }
 
