@@ -8,14 +8,14 @@
 import Foundation
 import SocialProtocol
 
-struct MastodonAccount: D14nAccount, Equatable {
+public struct MastodonAccount: D14nAccount, Equatable {
 
-    static let provider = Provider.Mastodon
+    public static let provider = Provider.Mastodon
 
-    let id: String
-    let domain: String
-    let name: String
-    let username: String
-    let avaterUrl: URL
+    public let id: String
+    public let domain: String
+    public let name: String
+    public let username: String
+    public let avaterUrl: URL
 
 }

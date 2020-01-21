@@ -13,7 +13,7 @@ import FoundationNetworking
 import SocialProtocol
 import HTTPExtension
 
-class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeByCode, PostAttachments {
+public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeByCode, PostAttachments {
 
     private struct RegisterApp: Codable {
         let id: String
@@ -53,14 +53,14 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
 
     static var callbackObserver: NSObjectProtocol?
 
-    static func handleCallback(_ url: URL) {
+    public static func handleCallback(_ url: URL) {
         NotificationQueue.default.enqueue(.init(name: .callbackMastodon,
                                                 object: nil,
                                                 userInfo: ["url" : url]),
                                           postingStyle: .asap)
     }
 
-    static func registerApp(base: String, name: String, redirectUri: String, success: @escaping D14nAuthorization.RegisterSuccess, failure: Client.Failure?) {
+    public static func registerApp(base: String, name: String, redirectUri: String, success: @escaping D14nAuthorization.RegisterSuccess, failure: Client.Failure?) {
         self.registerApp(HTTPClient.shared, base: base, name: name, redirectUri: redirectUri, success: success, failure: failure)
     }
 
@@ -120,18 +120,18 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
 
     var client: HTTPClientProtocol
 
-    var base: String
-    var key: String
-    var secret: String
+    public var base: String
+    public var key: String
+    public var secret: String
 
-    var credentials: Credentials?
-    var userAgent: String?
+    public var credentials: Credentials?
+    public var userAgent: String?
 
     private var mastodonCredentials: MastodonCredentials? {
         return self.credentials as? MastodonCredentials
     }
 
-    required init?(_ credentials: Credentials, userAgent: String?) {
+    required public init?(_ credentials: Credentials, userAgent: String?) {
         guard let credentials = credentials as? MastodonCredentials else {
             return nil
         }
@@ -146,7 +146,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         self.client = HTTPClient.shared
     }
 
-    required init(base: String, key: String, secret: String) {
+    required public init(base: String, key: String, secret: String) {
         self.base = base
         self.key = key
         self.secret = secret
@@ -193,7 +193,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         }
     }
 
-    func authorize(redirectUri: String, openURL: @escaping (URL) -> Void, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
+    public func authorize(redirectUri: String, openURL: @escaping (URL) -> Void, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
         if !base.isHTTPString {
             failure?(SocialError.invalidURL(string: base))
             return
@@ -219,7 +219,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         openURL(Self.authorizeURL(base: base, key: key, secret: secret, redirectUri: redirectUri))
     }
 
-    func authorize(openURL: @escaping (URL) -> Void, failure: Client.Failure?) {
+    public func authorize(openURL: @escaping (URL) -> Void, failure: Client.Failure?) {
         if !base.isHTTPString {
             failure?(SocialError.invalidURL(string: base))
             return
@@ -228,7 +228,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         openURL(Self.authorizeURL(base: base, key: key, secret: secret, redirectUri: "urn:ietf:wg:oauth:2.0:oob"))
     }
 
-    func requestToken(code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
+    public func requestToken(code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
         if !base.isHTTPString {
             failure?(SocialError.invalidURL(string: base))
             return
@@ -237,11 +237,11 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         self.authorization(redirectUri: "urn:ietf:wg:oauth:2.0:oob", code: code, success: success, failure: failure)
     }
 
-    func revoke(success: Client.Success?, failure: Client.Failure?) {
+    public func revoke(success: Client.Success?, failure: Client.Failure?) {
         failure?(SocialError.notImplements(className: NSStringFromClass(type(of: self)), function: #function))
     }
 
-    func verify(success: @escaping Client.AccountSuccess, failure: Client.Failure?) {
+    public func verify(success: @escaping Client.AccountSuccess, failure: Client.Failure?) {
         guard let credentials = self.mastodonCredentials
             , let domain = URL(string: credentials.base)?.host else {
             failure?(SocialError.failedVerify("Invalid token."))
@@ -277,7 +277,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         }
     }
 
-    func post(text: String, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
+    public func post(text: String, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
         guard let credentials = self.mastodonCredentials else {
             failure?(SocialError.failedPost("Invalid token."))
             return
@@ -315,7 +315,7 @@ class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, AuthorizeB
         }
     }
 
-    func post(text: String, image: Data?, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
+    public func post(text: String, image: Data?, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
         guard let image = image else {
             self.post(text: text, otherParams: otherParams, success: success, failure: failure)
             return

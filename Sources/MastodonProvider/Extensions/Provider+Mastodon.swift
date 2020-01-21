@@ -8,6 +8,6 @@
 import Foundation
 import SocialProtocol
 
-extension Provider {
+public extension Provider {
     static let Mastodon = Provider(rawValue: "Mastodon")
 }

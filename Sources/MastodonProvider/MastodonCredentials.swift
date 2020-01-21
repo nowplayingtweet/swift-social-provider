@@ -8,13 +8,13 @@
 import Foundation
 import SocialProtocol
 
-struct MastodonCredentials: D14nCredentials, OAuth2, Codable {
+public struct MastodonCredentials: D14nCredentials, OAuth2, Codable {
 
-    let base: String
+    public let base: String
 
-    let apiKey: String
-    let apiSecret: String
+    public let apiKey: String
+    public let apiSecret: String
 
-    let oauthToken: String
+    public let oauthToken: String
 
 }
