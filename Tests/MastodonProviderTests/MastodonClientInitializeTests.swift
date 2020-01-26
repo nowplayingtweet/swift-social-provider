@@ -3,11 +3,23 @@ import XCTest
 
 import SocialProtocol
 
-final class MastodonClientInitalizeTests: XCTestCase {
+private struct TestCredentials: D14nCredentials, OAuth2 {
+    static var oauthVersion: OAuth = .Two
+
+    var base: String
+    var apiKey: String
+    var apiSecret: String
+
+    var oauthToken: String
+}
+
+final class MastodonClientInitializeTests: XCTestCase {
 
     static var allTests = [
         ("testInitialize", testInitialize),
         ("testInitializeWithCredentials", testInitializeWithCredentials),
+        ("testInitializeInvalidCredentials", testInitializeInvalidCredentials),
+        ("testInitializeInvalidBaseURL", testInitializeInvalidBaseURL),
     ]
 
     func testInitialize() {
@@ -32,6 +44,19 @@ final class MastodonClientInitalizeTests: XCTestCase {
         XCTAssertNotNil(clientCredentials)
 
         XCTAssertEqual(clientCredentials?.oauthToken, credentials.oauthToken)
+    }
+
+    func testInitializeInvalidCredentials() {
+        let credentials = TestCredentials(base: "https://social.invalid", apiKey: "key", apiSecret: "secret", oauthToken: "token")
+        let client = MastodonClient(credentials)
+        XCTAssertNil(client)
+    }
+
+    func testInitializeInvalidBaseURL() {
+        XCTAssertNil(MastodonClient(base: "social.invalid", key: "key", secret: "secret"))
+
+        let credentials = MastodonCredentials(base: "social.invalid", apiKey: "key", apiSecret: "secret", oauthToken: "token")
+        XCTAssertNil(MastodonClient(credentials))
     }
 
 }
