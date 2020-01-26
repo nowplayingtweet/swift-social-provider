@@ -7,6 +7,8 @@ final class MastodonClientAuthorizeTests: XCTestCase {
 
     static var allTests = [
         ("testAuthorizeURL", testAuthorizeURL),
+        ("testAuthorizeRedirectCallback", testAuthorizeRedirectCallback),
+        ("testAuthorizeSkipInvalidURLEvent", testAuthorizeSkipInvalidURLEvent),
         ("testRequestToken", testRequestToken),
         ("testRequestTokenClientError", testRequestTokenClientError),
         ("testRequestTokenErrorResponse", testRequestTokenErrorResponse),
@@ -22,6 +24,59 @@ final class MastodonClientAuthorizeTests: XCTestCase {
 
         client?.authorize(openURL: { url in
             XCTAssertEqual(url, authorizeURL)
+        }, failure: { _ in
+            XCTFail()
+        })
+    }
+
+    func testAuthorizeRedirectCallback() {
+        let authorizeURL = URL(string: "https://social.test/oauth/authorize?client_id=key&client_secret=secret&redirect_uri=test-scheme://&scopes=read%20write&response_type=code")
+
+        let httpClient = HTTPClientMock()
+        let client = MastodonClient(base: "https://social.test", key: "key", secret: "secret", httpClient: httpClient)
+        XCTAssertNotNil(client)
+
+        client?.authorize(redirectUri: "test-scheme://", openURL: { url in
+            XCTAssertEqual(url, authorizeURL)
+            let httpClient = HTTPClientMock(body: """
+            {
+                "access_token": "authorization-token",
+                "token_type": "Bearer",
+                "scope": "read write",
+                "created_at": 1234567890
+            }
+            """.data(using: .utf8))
+            client?.client = httpClient
+            NotificationQueue.default.enqueue(.init(name: .callbackMastodon,
+                                                    userInfo: ["url": URL(string: "test-scheme://?code=code")!]),
+                                              postingStyle: .now)
+        }, success: { credentials in
+            guard let credentials = credentials as? MastodonCredentials
+                , let clientCredentials = client?.credentials as? MastodonCredentials else {
+                    XCTFail()
+                    return
+            }
+            XCTAssertEqual(credentials.base, "https://social.test")
+            XCTAssertEqual(credentials.apiKey, "key")
+            XCTAssertEqual(credentials.apiSecret, "secret")
+            XCTAssertEqual(credentials.oauthToken, "authorization-token")
+            XCTAssertEqual(clientCredentials.oauthToken, "authorization-token")
+        }, failure: { _ in
+            XCTFail()
+        })
+    }
+
+    func testAuthorizeSkipInvalidURLEvent() {
+        let httpClient = HTTPClientMock()
+        let client = MastodonClient(base: "https://social.test", key: "key", secret: "secret", httpClient: httpClient)
+        XCTAssertNotNil(client)
+
+        client?.authorize(redirectUri: "test-scheme://", openURL: { _ in
+            NotificationQueue.default.enqueue(.init(name: .callbackMastodon,
+                                                    userInfo: ["url": URL(string: "test-scheme://")!]),
+                                              postingStyle: .now)
+        }, success: { credentials in
+            XCTFail()
         }, failure: { _ in
             XCTFail()
         })

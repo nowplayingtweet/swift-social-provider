@@ -77,7 +77,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         ]
 
         client.post(url: "\(base)/api/v1/apps", headers: [
-            ("User-Agent", "Swift Social Media Provider"),
+            ("User-Agent", "\(name), Swift Social Service Provider"),
             ("Content-Type", "application/x-www-form-urlencoded"),
         ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
             if let error = error {
@@ -124,6 +124,10 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
 
     private var mastodonCredentials: MastodonCredentials? {
         return self.credentials as? MastodonCredentials
+    }
+
+    private var userAgentHeader: (String, String) {
+        return ("User-Agent", self.userAgent ?? "Swift Social Service Provider")
     }
 
     required public init?(_ credentials: Credentials, userAgent: String?) {
@@ -180,7 +184,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         ]
 
         self.client.post(url: "\(base)/oauth/token", headers: [
-            ("User-Agent", "Swift Social Media Provider"),
+            self.userAgentHeader,
             ("Content-Type", "application/x-www-form-urlencoded"),
         ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
             if let error = error {
@@ -275,7 +279,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         }
 
         self.client.get(url: "\(credentials.base)/api/v1/accounts/verify_credentials", headers: [
-            ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
+            self.userAgentHeader,
             ("Authorization", "Bearer \(credentials.oauthToken)"),
         ]) { data, response, error in
             if let error = error {
@@ -313,7 +317,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         }
 
         self.client.post(url: "\(credentials.base)/api/v1/statuses", headers: [
-            ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
+            self.userAgentHeader,
             ("Authorization", "Bearer \(credentials.oauthToken)"),
             ("Content-Type", "application/x-www-form-urlencoded"),
         ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
@@ -350,7 +354,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         let multipartData = requestBody.multipartData(boundary: boundary)
 
         self.client.post(url: "\(credentials.base)/api/v1/media", headers: [
-            ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
+            self.userAgentHeader,
             ("Authorization", "Bearer \(credentials.oauthToken)"),
             ("Content-Type", "multipart/form-data; boundary=\(boundary)"),
         ], body: multipartData) { data, response, error in
