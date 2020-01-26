@@ -150,6 +150,12 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         self.client = HTTPClient.shared
     }
 
+    convenience init?(_ credentials: Credentials, userAgent: String?, httpClient: HTTPClientProtocol) {
+        self.init(credentials, userAgent: userAgent)
+
+        self.client = httpClient
+    }
+
     required public init?(base: String, key: String, secret: String) {
         if !base.isHTTPString {
             return nil
@@ -160,6 +166,12 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         self.secret = secret
 
         self.client = HTTPClient.shared
+    }
+
+    convenience init?(base: String, key: String, secret: String, httpClient: HTTPClientProtocol) {
+        self.init(base: base, key: key, secret: secret)
+
+        self.client = httpClient
     }
 
     private func authorization(redirectUri: String, code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {

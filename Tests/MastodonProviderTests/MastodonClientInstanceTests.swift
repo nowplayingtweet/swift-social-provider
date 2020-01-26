@@ -8,6 +8,7 @@ final class MastodonClientInstanceTests: XCTestCase {
     static var allTests = [
         ("testInitializeWithKeySecret", testInitializeWithKeySecret),
         ("testInitializeWithCredentials", testInitializeWithCredentials),
+        ("testAuthorizeURL", testAuthorizeURL),
     ]
 
     func testInitializeWithKeySecret() {
@@ -32,6 +33,20 @@ final class MastodonClientInstanceTests: XCTestCase {
         XCTAssertNotNil(clientCredentials)
 
         XCTAssertEqual(clientCredentials?.oauthToken, credentials.oauthToken)
+    }
+
+    func testAuthorizeURL() {
+        let authorizeURL = URL(string: "https://social.test/oauth/authorize?client_id=key&client_secret=secret&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scopes=read%20write&response_type=code")
+
+        let httpClient = HTTPClientMock()
+        let client = MastodonClient(base: "https://social.test", key: "key", secret: "secret", httpClient: httpClient)
+        XCTAssertNotNil(client)
+
+        client?.authorize(openURL: { url in
+            XCTAssertEqual(url, authorizeURL)
+        }, failure: { _ in
+            XCTFail()
+        })
     }
 
 }
