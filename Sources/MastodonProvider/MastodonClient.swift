@@ -136,6 +136,10 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
             return nil
         }
 
+        if !credentials.base.isHTTPString {
+            return nil
+        }
+
         self.base = credentials.base
         self.key = credentials.apiKey
         self.secret = credentials.apiSecret
@@ -146,7 +150,11 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         self.client = HTTPClient.shared
     }
 
-    required public init(base: String, key: String, secret: String) {
+    required public init?(base: String, key: String, secret: String) {
+        if !base.isHTTPString {
+            return nil
+        }
+
         self.base = base
         self.key = key
         self.secret = secret
@@ -196,11 +204,6 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
     }
 
     public func authorize(redirectUri: String, openURL: @escaping (URL) -> Void, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
-        if !base.isHTTPString {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
         Self.callbackObserver = NotificationCenter.default.addObserver(forName: .callbackMastodon, object: nil, queue: nil) { notification in
             guard let callbackUri = URL(string: redirectUri)
                 , let url = notification.userInfo?["url"] as? URL
@@ -222,20 +225,10 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
     }
 
     public func authorize(openURL: @escaping (URL) -> Void, failure: Client.Failure?) {
-        if !base.isHTTPString {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
         openURL(Self.authorizeURL(base: base, key: key, secret: secret, redirectUri: "urn:ietf:wg:oauth:2.0:oob"))
     }
 
     public func requestToken(code: String, success: @escaping Client.TokenSuccess, failure: Client.Failure?) {
-        if !base.isHTTPString {
-            failure?(SocialError.invalidURL(string: base))
-            return
-        }
-
         self.authorization(redirectUri: "urn:ietf:wg:oauth:2.0:oob", code: code, success: success, failure: failure)
     }
 

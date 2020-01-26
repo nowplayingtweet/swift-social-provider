@@ -11,20 +11,20 @@ final class MastodonClientInstanceTests: XCTestCase {
     ]
 
     func testInitializeWithKeySecret() {
-        let client = MastodonClient(base: "base", key: "key", secret: "secret")
+        let client = MastodonClient(base: "https://social.test", key: "key", secret: "secret")
+        XCTAssertNotNil(client)
 
-        XCTAssertEqual(client.base, "base")
-        XCTAssertEqual(client.key, "key")
-        XCTAssertEqual(client.secret, "secret")
+        XCTAssertEqual(client?.base, "https://social.test")
+        XCTAssertEqual(client?.key, "key")
+        XCTAssertEqual(client?.secret, "secret")
     }
 
     func testInitializeWithCredentials() {
-        let credentials = MastodonCredentials(base: "base", apiKey: "key", apiSecret: "secret", oauthToken: "token")
+        let credentials = MastodonCredentials(base: "https://social.test", apiKey: "key", apiSecret: "secret", oauthToken: "token")
         let client = MastodonClient(credentials)
-
         XCTAssertNotNil(client)
 
-        XCTAssertEqual(client?.base, "base")
+        XCTAssertEqual(client?.base, "https://social.test")
         XCTAssertEqual(client?.key, "key")
         XCTAssertEqual(client?.secret, "secret")
 
