@@ -13,8 +13,8 @@ import FoundationNetworking
 import SocialProtocol
 
 public protocol HTTPClientProtocol {
-    func get(url: String, headers: [(String, String)], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> Void
-    func post(url: String, headers: [(String, String)], body: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> Void
+    func get(url: String, headers: [(String, String)], completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) -> Void
+    func post(url: String, headers: [(String, String)], body: Data?, completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) -> Void
 }
 
 public class HTTPClient: HTTPClientProtocol {
@@ -27,7 +27,7 @@ public class HTTPClient: HTTPClientProtocol {
         self.session = session
     }
 
-    public func get(url urlString: String, headers: [(String, String)] = [], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    public func get(url urlString: String, headers: [(String, String)] = [], completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) {
         guard let url = URL(string: urlString) else {
             completionHandler(nil, nil, SocialError.invalidURL(string: urlString))
             return
@@ -43,11 +43,11 @@ public class HTTPClient: HTTPClientProtocol {
             }
         }
 
-        self.session.dataTask(with: request, completionHandler: completionHandler).resume()
+        self.session.dataTask(with: request, completionHandler: { completionHandler($0, $1 as? HTTPURLResponse, $2) }).resume()
         return
     }
 
-    public func post(url urlString: String, headers: [(String, String)] = [], body: Data? = nil, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    public func post(url urlString: String, headers: [(String, String)] = [], body: Data? = nil, completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) {
         guard let url = URL(string: urlString) else {
             completionHandler(nil, nil, SocialError.invalidURL(string: urlString))
             return
@@ -63,7 +63,7 @@ public class HTTPClient: HTTPClientProtocol {
             }
         }
 
-        self.session.dataTask(with: request, completionHandler: completionHandler).resume()
+        self.session.dataTask(with: request, completionHandler: { completionHandler($0, $1 as? HTTPURLResponse, $2) }).resume()
         return
     }
 
