@@ -19,7 +19,7 @@ class HTTPClientMock: HTTPClientProtocol {
         self.responseError = error
     }
 
-    func get(url: String, headers: [(String, String)], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    func get(url: String, headers: [(String, String)], completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) {
         guard let url = URL(string: url) else {
             completionHandler(nil, nil, URLError(.cancelled))
             return
@@ -33,7 +33,7 @@ class HTTPClientMock: HTTPClientProtocol {
         completionHandler(self.responseBody, HTTPURLResponse(url: url, statusCode: self.statusCode, httpVersion: "http/1.1", headerFields: self.headerFields), nil)
     }
 
-    func post(url: String, headers: [(String, String)], body: Data?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    func post(url: String, headers: [(String, String)], body: Data?, completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void) {
         guard let url = URL(string: url) else {
             completionHandler(nil, nil, URLError(.cancelled))
             return
