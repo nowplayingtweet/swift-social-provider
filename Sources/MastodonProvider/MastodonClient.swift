@@ -245,13 +245,47 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
     }
 
     public func revoke(success: Client.Success?, failure: Client.Failure?) {
-        failure?(SocialError.notImplements(className: NSStringFromClass(type(of: self)), function: #function))
+        guard let credentials = self.mastodonCredentials else {
+            failure?(SocialError.failedRevoke("Not authorized client."))
+            return
+        }
+
+        let requestParams: [(String, Any)] = [
+            ("client_id", credentials.apiKey),
+            ("client_secret", credentials.apiSecret),
+            ("token", credentials.oauthToken),
+        ]
+
+        self.client.post(url: "\(credentials.base)/oauth/revoke", headers: [
+            ("User-Agent", self.userAgent ?? "Swift Social Media Provider"),
+        ], body: requestParams.urlencoded.data(using: .utf8)) { data, response, error in
+            if let error = error {
+                failure?(error)
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else {
+                failure?(SocialError.failedRevoke("Invalid response."))
+                return
+            }
+
+            if response.statusCode != 200 {
+                failure?(SocialError.failedRevoke(String(describing: response.statusCode)))
+                return
+            }
+
+            success?()
+        }
     }
 
     public func verify(success: @escaping Client.AccountSuccess, failure: Client.Failure?) {
-        guard let credentials = self.mastodonCredentials
-            , let domain = URL(string: credentials.base)?.host else {
-            failure?(SocialError.failedVerify("Invalid token."))
+        guard let credentials = self.mastodonCredentials else {
+            failure?(SocialError.failedVerify("Not authorized client."))
+            return
+        }
+
+        guard let domain = URL(string: credentials.base)?.host else {
+            failure?(SocialError.invalidURL(string: credentials.base))
             return
         }
 
@@ -286,7 +320,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
 
     public func post(text: String, otherParams: [(String, String)], success: Client.Success?, failure: Client.Failure?) {
         guard let credentials = self.mastodonCredentials else {
-            failure?(SocialError.failedPost("Invalid token."))
+            failure?(SocialError.failedPost("Not authorized client."))
             return
         }
 
@@ -329,7 +363,7 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
         }
 
         guard let credentials = self.mastodonCredentials else {
-            failure?(SocialError.failedPost("Invalid token."))
+            failure?(SocialError.failedPost("Not authorized client."))
             return
         }
 
