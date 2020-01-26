@@ -23,10 +23,21 @@ final class MastodonClientStaticFunctionTests: XCTestCase {
     }
 
     func testRegisterApp() {
-        let client = HTTPClientMock(body: "{ \"client_id\": \"id string\", \"client_secret\": \"secret string\" }".data(using: .utf8))
-        MastodonClient.registerApp(client, base: "https://social.test", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { id, secret in
-            XCTAssertEqual(id, "id string")
-            XCTAssertEqual(secret, "secret string")
+        let name = "test app"
+        let redirectUri = "urn:ietf:wg:oauth:2.0:oob"
+        let client = HTTPClientMock(body: """
+        {
+            "id": "2357",
+            "name": "\(name)",
+            "website": null,
+            "redirect_uri": "\(redirectUri)",
+            "client_id": "client id",
+            "client_secret": "client secret"
+        }
+        """.data(using: .utf8))
+        MastodonClient.registerApp(client, base: "https://social.test", name: name, redirectUri: redirectUri, success: { id, secret in
+            XCTAssertEqual(id, "client id")
+            XCTAssertEqual(secret, "client secret")
         }, failure: { error in
             XCTFail()
         })
@@ -51,17 +62,31 @@ final class MastodonClientStaticFunctionTests: XCTestCase {
     }
 
     func testRegisterAppErrorResponse() {
-        let client = HTTPClientMock(statusCode: 403, body: "{ \"error\": \"message\" }".data(using: .utf8))
+        let client = HTTPClientMock(statusCode: 422, body: """
+        {
+            "error": "Validation failed: Redirect URI must be an absolute URI."
+        }
+        """.data(using: .utf8))
         MastodonClient.registerApp(client, base: "https://social.invalid", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { _,_ in
             XCTFail()
         }, failure: { error in
-            XCTAssertEqual(error.localizedDescription, SocialError.failedAuthorize("403").localizedDescription)
+            XCTAssertEqual(error.localizedDescription, SocialError.failedAuthorize("422").localizedDescription)
         })
     }
 
     func testRegisterAppInvalidResponse() {
-        let client = HTTPClientMock(body: "{ \"client_id\": \"id string\" }".data(using: .utf8))
-        MastodonClient.registerApp(client, base: "https://social.invalid", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { _,_ in
+        let name = "test app"
+        let redirectUri = "urn:ietf:wg:oauth:2.0:oob"
+        let client = HTTPClientMock(body: """
+        {
+            "id": "2357",
+            "name": "\(name)",
+            "website": null,
+            "redirect_uri": "\(redirectUri)",
+            "client_id": "client id"
+        }
+        """.data(using: .utf8))
+        MastodonClient.registerApp(client, base: "https://social.invalid", name: name, redirectUri: redirectUri, success: { _,_ in
             XCTFail()
         }, failure: { error in
             XCTAssertEqual(error.localizedDescription, SocialError.failedAuthorize("Invalid response.").localizedDescription)
