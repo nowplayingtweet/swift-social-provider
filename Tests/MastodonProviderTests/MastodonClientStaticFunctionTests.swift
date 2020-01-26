@@ -9,10 +9,9 @@ final class MastodonClientStaticFunctionTests: XCTestCase {
         ("testHandleCallback", testHandleCallback),
         ("testRegisterApp", testRegisterApp),
         ("testPublicRegisterAppInvalidURL", testPublicRegisterAppInvalidURL),
-        ("testRegisterAppErrorHandling", testRegisterAppErrorHandling),
-        ("testRegisterAppInvalidResponse", testRegisterAppInvalidResponse),
+        ("testRegisterAppClientError", testRegisterAppClientError),
         ("testRegisterAppErrorResponse", testRegisterAppErrorResponse),
-        ("testRegisterAppInvalidObject", testRegisterAppInvalidObject),
+        ("testRegisterAppInvalidResponse", testRegisterAppInvalidResponse),
     ]
 
     func testHandleCallback() {
@@ -41,22 +40,13 @@ final class MastodonClientStaticFunctionTests: XCTestCase {
         })
     }
 
-    func testRegisterAppErrorHandling() {
+    func testRegisterAppClientError() {
         let responseError = URLError(.cannotConnectToHost)
         let client = HTTPClientMock(error: responseError)
         MastodonClient.registerApp(client, base: "https://social.invalid", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { _,_ in
             XCTFail()
         }, failure: { error in
             XCTAssertEqual(error.localizedDescription, responseError.localizedDescription)
-        })
-    }
-
-    func testRegisterAppInvalidResponse() {
-        let client = HTTPClientMock(statusCode: 403, body: nil)
-        MastodonClient.registerApp(client, base: "https://social.invalid", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { _,_ in
-            XCTFail()
-        }, failure: { error in
-            XCTAssertEqual(error.localizedDescription, SocialError.failedAuthorize("Invalid response.").localizedDescription)
         })
     }
 
@@ -69,7 +59,7 @@ final class MastodonClientStaticFunctionTests: XCTestCase {
         })
     }
 
-    func testRegisterAppInvalidObject() {
+    func testRegisterAppInvalidResponse() {
         let client = HTTPClientMock(body: "{ \"client_id\": \"id string\" }".data(using: .utf8))
         MastodonClient.registerApp(client, base: "https://social.invalid", name: "test app", redirectUri: "urn:ietf:wg:oauth:2.0:oob", success: { _,_ in
             XCTFail()
