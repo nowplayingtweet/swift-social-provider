@@ -85,18 +85,13 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            guard let data = data
-                , let response = response as? HTTPURLResponse else {
-                    failure?(SocialError.failedAuthorize("Invalid response."))
-                    return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedAuthorize(String(describing: response.statusCode)))
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedAuthorize(response?.statusCode.description ?? "Nil response."))
                 return
             }
 
-            guard let client = try? JSONDecoder().decode(RegisterApp.self, from: data) else {
+            guard let data = data
+                , let client = try? JSONDecoder().decode(RegisterApp.self, from: data) else {
                     failure?(SocialError.failedAuthorize("Invalid response."))
                     return
             }
@@ -193,20 +188,15 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedAuthorize(response?.statusCode.description ?? "Nil response."))
+                return
+            }
+
             guard let data = data
-                , let response = response as? HTTPURLResponse else {
+                , let oauth = try? JSONDecoder().decode(Authorization.self, from: data) else {
                     failure?(SocialError.failedAuthorize("Invalid response."))
                     return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedAuthorize(String(describing: response.statusCode)))
-                return
-            }
-
-            guard let oauth = try? JSONDecoder().decode(Authorization.self, from: data) else {
-                failure?(SocialError.failedAuthorize("Invalid response."))
-                return
             }
 
             let credentials = MastodonCredentials(base: self.base, apiKey: self.key, apiSecret: self.secret, oauthToken: oauth.token)
@@ -264,13 +254,8 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            guard let response = response as? HTTPURLResponse else {
-                failure?(SocialError.failedRevoke("Invalid response."))
-                return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedRevoke(String(describing: response.statusCode)))
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedRevoke(response?.statusCode.description ?? "Nil response."))
                 return
             }
 
@@ -298,18 +283,13 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            guard let data = data
-                , let response = response as? HTTPURLResponse else {
-                    failure?(SocialError.failedVerify("Invalid response."))
-                    return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedVerify(String(describing: response.statusCode)))
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedVerify(response?.statusCode.description ?? "Nil response."))
                 return
             }
 
-            guard let account = try? JSONDecoder().decode(Account.self, from: data) else {
+            guard let data = data
+                , let account = try? JSONDecoder().decode(Account.self, from: data) else {
                     failure?(SocialError.failedVerify("Invalid response."))
                     return
             }
@@ -342,13 +322,8 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            guard let response = response as? HTTPURLResponse else {
-                failure?(SocialError.failedPost("Invalid response."))
-                return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedPost(String(describing: response.statusCode)))
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedPost(response?.statusCode.description ?? "Nil response."))
                 return
             }
 
@@ -384,18 +359,13 @@ public class MastodonClient: Client, D14nAuthorization, AuthorizeByCallback, Aut
                 return
             }
 
-            guard let data = data
-                , let response = response as? HTTPURLResponse else {
-                    failure?(SocialError.failedPost("Invalid response."))
-                    return
-            }
-
-            if response.statusCode != 200 {
-                failure?(SocialError.failedPost(String(describing: response.statusCode)))
+            if response?.statusCode != 200 {
+                failure?(SocialError.failedPost(response?.statusCode.description ?? "Nil response."))
                 return
             }
 
-            guard let media = try? JSONDecoder().decode(Media.self, from: data) else {
+            guard let data = data
+                , let media = try? JSONDecoder().decode(Media.self, from: data) else {
                     failure?(SocialError.failedPost("Invalid response."))
                     return
             }
